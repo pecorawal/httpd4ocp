@@ -1,0 +1,36 @@
+
+= Procedimento de configuração do HTTPD para instalação do OCP 4.x
+
+O papel do servidor httpd é fornecer os arquivos de ignition config de acordo com a seleção efetuada no menu do GRUB, o qual foi iniciado via boot PXE e aparece na console da máquina virtual do hypervisor.
+Para o adequado funcionamento do servidor httpd o arquivo de configuração em /etc/httpd/conf/httpd.conf foi alterado o parametro Listen para escuta na porta 81 conforme trecho do arquivo abaixo.
+
+*/etc/httpd/conf/httpd.conf*
+
+[source]
+----
+Listen *:81
+----
+
+Os arquivos gerados pelo instalador (forma de criação dos arquivos de ignition está descrita na seção de implantação) devem estar dispostos no diretório e nomes de arquivos como seguem:
+
+
+[source]
+----
+[root@ocp-bastion ignition]# pwd
+/var/www/html/ignition
+[root@ocp-bastion ignition]# tree
+.
+├── bootstrap.ign
+├── master.ign
+└── worker.ign
+----
+
+
+Por último deve ser aplicado o permissionamentos de arquivo.
+
+[source]
+----
+chown -R apache:apache /var/www/html
+chmod -R 740 /var/www/html
+----
+
